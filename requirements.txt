@@ -49,9 +49,6 @@ sympy==1.12
 threadpoolctl==3.4.0
 tifffile==2024.2.12
 timm==0.9.16
-torch==2.2.2
-torchaudio==2.2.2
-torchvision==0.17.2
 tqdm==4.66.2
 typing_extensions==4.10.0
 urllib3==2.2.1
