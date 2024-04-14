@@ -1,4 +1,4 @@
-import sys
+import subprocess
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from PIL import Image
 from io import BytesIO
@@ -33,8 +33,8 @@ async def remove_background(file: UploadFile = File(...)):
 
 @app.post("/shutdown/")
 async def shutdown_server():
-    sys.exit("Server shutting down...")
-
+    # 执行系统关机命令
+    subprocess.run(["shutdown", "/s", "/t", "1"])
 
 if __name__ == "__main__":
     import uvicorn
