@@ -1,3 +1,4 @@
+import sys
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from PIL import Image
 from io import BytesIO
@@ -10,6 +11,7 @@ os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 app = FastAPI()
 
 remover = Remover(mode='base', jit=False)  # 初始化 Remover 类
+
 
 @app.post("/remove_background/")
 async def remove_background(file: UploadFile = File(...)):
@@ -27,6 +29,12 @@ async def remove_background(file: UploadFile = File(...)):
         return StreamingResponse(buffered, media_type="image/png")  # 返回处理后的图像数据
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))  # 如果出现异常，则返回服务器错误状态码和错误信息
+
+
+@app.post("/shutdown/")
+async def shutdown_server():
+    sys.exit("Server shutting down...")
+
 
 if __name__ == "__main__":
     import uvicorn
