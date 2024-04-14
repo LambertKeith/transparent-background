@@ -35,6 +35,7 @@ async def remove_background(file: UploadFile = File(...)):
 async def shutdown_server():
     # 执行系统关机命令
     subprocess.run(["shutdown", "/s", "/t", "1"])
+    #print("shut")
 
 if __name__ == "__main__":
     import uvicorn
