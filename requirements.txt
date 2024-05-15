@@ -1,5 +1,5 @@
 # requirements.txt
-
+aiofiles==23.2.1
 albumentations==1.4.3
 annotated-types==0.6.0
 anyio==4.3.0
