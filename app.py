@@ -4,10 +4,12 @@ import time
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from PIL import Image
 from io import BytesIO
-from transparent_background import Remover
+from transparent_background import Remover, picture_compression
 from starlette.responses import StreamingResponse
-
 import os
+
+
+
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 
 app = FastAPI()
@@ -48,10 +50,20 @@ import aiofiles
 async def process_image(input_path, output_path, remover):
     try:
         start_time = time.time()  # Record start time
-        # Open input image
-        with open(input_path, "rb") as f:
-            img_data = f.read()
+        # Open and compress input image
+        async with aiofiles.open(input_path, "rb") as f:
+            img_data = await f.read()
         img = Image.open(BytesIO(img_data)).convert('RGB')
+        
+        # Get image size and calculate compression quality
+        image_size = img.width * img.height
+        quality = picture_compression.calculate_quality(image_size)
+
+        # Compress image
+        buffer = BytesIO()
+        img.save(buffer, format='JPEG', quality=quality, optimize=True)
+        buffer.seek(0)
+        img = Image.open(buffer)
 
         # Process image (Replace this with your image processing logic)
         out = remover.process(img)
@@ -59,7 +71,6 @@ async def process_image(input_path, output_path, remover):
         # Simulate some processing time
         await asyncio.sleep(1)
         
-
         async def save_image(output_path, out):
             async with aiofiles.open(output_path, "wb") as f:
                 buffer = BytesIO()
