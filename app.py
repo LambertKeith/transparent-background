@@ -45,6 +45,15 @@ async def remove_background(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=str(e))  # 如果出现异常，则返回服务器错误状态码和错误信息
 
 
+@app.post("/test/")
+async def test():
+    try:
+        # 返回一个简单的响应
+        return {"message": "Hello, World!"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))  # 如果出现异常，则返回服务器错误状态码和错误信息
+
+
 import aiofiles
 
 async def process_image(input_path, output_path, remover):
